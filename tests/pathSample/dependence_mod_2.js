@@ -1,0 +1,1 @@
+jsml.exports("testalias.dependence_mod_2", "dependence2 module data here");
