@@ -3,6 +3,7 @@
 
 ## 概要
 javascript module loader(jsml)はブラウザ、nodejs上で動作する外部モジュールローダーです. 
+![alt text](http://coremind.jp/devDocs/jsml/jsml.png)
 サポートしているブラウザ
 * Chrome
 * Firefox
