@@ -10,13 +10,6 @@ javascript module loader(jsml)はブラウザ、nodejs上で動作する外部�
 * Safari
 * InternetExplorer 6+
 
-## 導入方法
-
-1.jsml.jsをダンロード
-2.htmlでインポート
-```HTML
-script type="text/javascript" src="http://your_server.com/js/jsml.js"
-```
 ## Documentation
 
 http://coremind.jp/devDocs/jsml/symbols/jsml.html
