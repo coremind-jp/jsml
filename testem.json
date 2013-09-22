@@ -1,7 +1,7 @@
 {
 	"framework" : "jasmine",
 	"src_files" : [
-		"jsml.js",
+		"src/jsml.js",
 		"tests/*.js"
 	]
 }

@@ -4,13 +4,24 @@
  * @author otn83 nakahara@coremind.jp
  * @license http://en.wikipedia.org/wiki/MIT_License
  * @description javascript module loader.
+ **/
+/**
+ * javascript module loader(jsml)はブラウザ、nodejs上で動作する外部モジュールローダーです.
+ * <br>サポートしているブラウザ<br>
+ * ・Chrome<br>
+ * ・Firefox<br>
+ * ・Opera<br>
+ * ・Safari<br>
+ * ・InternetExplorer 6+<br>
+ * @namespace
  */
+var jsml;
 /*@cc_on
     @if (@_jscript_version <= 6)
         window.console = { log:function(){} };
     @end
 @*/
-;(function(g)
+(function(g)
 {
     g.IS_NODE = this.window === undefined;
     var STATE = {
@@ -216,67 +227,58 @@
             _toUrl(packagePath), { encoding:"utf8" });
     };
 
-    if (g.jsml)
-        throw new Error("window has property 'jsml'.");
+    if (!g.jsml)
+    {
+        g.jsml = /** @lends jsml */{
+            /**
+             * モジュールを格納しているルートディレクトリパスのエイリアスを設定します.
+             * <br>設定したエイリアスを利用してモジュールにアクセスすることが出来るようになります。
+             * <br>
+             * <br>「./abc/def/G.js」というモジュールを読み込む例：
+             * @example
+             * jsml.setAlias("./abc", "abcAlias");
+             * jsml.require("abcAlias.def.G", function(){
+             *     var gModule = jsml.modules["abcAlias.def.G"];
+             *     alert("module [G] is loaded.");
+             * });
+             * @function
+             * @param {String} url モジュールを格納しているルートディレクトリ
+             * @param {String} aliasName エイリアス
+             */
+            setAlias:setAlias,
+            /**
+             * 外部モジュールを読み込みます.
+             * <br>packageListの指定はエイリアスを利用する必要があります。
+             * @function
+             * @see jsml.setAlias
+             * @param  {Array} packageList 外部モジュールへの参照パスを格納した配列
+             * @param  {Function} callback 全ての外部モジュールを読み込み終わった際に呼び出すコールバック関数
+             */
+            require:require,
+            /**
+             * 外部モジュールを定義します.
+             * <br>packagePath, dependencePackageの指定はエイリアスを利用する必要があります。
+             * @see jsml.setAlias
+             * @function
+             * @param  {String} packagePath パッケージ名を含めたモジュールの完全な名称
+             * @param  {Object} data モジュールの実体
+             * @param  {Array} dependencePackage 依存している外部モジュールの参照パスを格納した配列
+             */
+            exports:exports,
+            /**
+             * 参照パスをキーとして{@link jsml.require}によって読み込まれたモジュールを格納するオブジェクトです.
+             * <br>参照パスの指定はエイリアスを利用する必要があります。
+             * @see jsml.setAlias
+             * @type {Object}
+             */
+            modules:modules
+        };
 
-    g.jsml = /** @lends jsml */{
-        /**
-         * モジュールを格納しているルートディレクトリパスのエイリアスを設定します.
-         * <br>設定したエイリアスを利用してモジュールにアクセスすることが出来るようになります。
-         * <br>
-         * <br>「./abc/def/G.js」というモジュールを読み込む例：
-         * @example
-         * jsml.setAlias("./abc", "abcAlias");
-         * jsml.require("abcAlias.def.G", function(){
-         *     var gModule = jsml.modules["abcAlias.def.G"];
-         *     alert("module [G] is loaded.");
-         * });
-         * @function
-         * @param {String} url モジュールを格納しているルートディレクトリ
-         * @param {String} aliasName エイリアス
-         */
-        setAlias:setAlias,
-        /**
-         * 外部モジュールを読み込みます.
-         * <br>packageListの指定はエイリアスを利用する必要があります。
-         * @function
-         * @see jsml.setAlias
-         * @param  {Array} packageList 外部モジュールへの参照パスを格納した配列
-         * @param  {Function} callback 全ての外部モジュールを読み込み終わった際に呼び出すコールバック関数
-         */
-        require:require,
-        /**
-         * 外部モジュールを定義します.
-         * <br>packagePath, dependencePackageの指定はエイリアスを利用する必要があります。
-         * @see jsml.setAlias
-         * @function
-         * @param  {String} packagePath パッケージ名を含めたモジュールの完全な名称
-         * @param  {Object} data モジュールの実体
-         * @param  {Array} dependencePackage 依存している外部モジュールの参照パスを格納した配列
-         */
-        exports:exports,
-        /**
-         * 参照パスをキーとして{@link jsml.require}によって読み込まれたモジュールを格納するオブジェクトです.
-         * <br>参照パスの指定はエイリアスを利用する必要があります。
-         * @see jsml.setAlias
-         * @type {Object}
-         */
-        modules:modules
-    };
+        IS_NODE ?
+            g.jsml.requireSourceFile = requireSourceFile:
+            g.jsml.concatScript = concatScript;
+    }
+    else
+        throw new Error("already defined 'jsml'.");
 
-    IS_NODE ?
-        g.jsml.requireSourceFile = requireSourceFile:
-        g.jsml.concatScript = concatScript;
-
-})(this.global || this.window);
-/**
- * javascript module loader(jsml)はブラウザ、nodejs上で動作する外部モジュールローダーです.
- * <br>サポートしているブラウザ<br>
- * ・Chrome<br>
- * ・Firefox<br>
- * ・Opera<br>
- * ・Safari<br>
- * ・InternetExplorer 6+<br>
- * @namespace
- */
-var jsml = {};
+})(this.window || global);
