@@ -1,0 +1,4 @@
+/docs
+docsBuild.bat
+/*.sublime-project
+/*.sublime-workspace

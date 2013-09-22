@@ -10,7 +10,7 @@
         window.console = { log:function(){} };
     @end
 @*/
-(function(g)
+;(function(g)
 {
     g.IS_NODE = this.window === undefined;
     var STATE = {
@@ -219,7 +219,7 @@
     if (g.jsml)
         throw new Error("window has property 'jsml'.");
 
-    var jsml = /** @lends jsml */{
+    g.jsml = /** @lends jsml */{
         /**
          * モジュールを格納しているルートディレクトリパスのエイリアスを設定します.
          * <br>設定したエイリアスを利用してモジュールにアクセスすることが出来るようになります。
@@ -263,13 +263,12 @@
          */
         modules:modules
     };
-    g.jsml = jsml;
 
     IS_NODE ?
         g.jsml.requireSourceFile = requireSourceFile:
         g.jsml.concatScript = concatScript;
 
-})(global || window);
+})(this.global || this.window);
 /**
  * javascript module loader(jsml)はブラウザ、nodejs上で動作する外部モジュールローダーです.
  * <br>サポートしているブラウザ<br>
